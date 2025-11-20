@@ -1,0 +1,61 @@
+================================================================================
+COMPETITOR URL FETCH TEST
+================================================================================
+
+TEST 1: Fetching single URL
+--------------------------------------------------------------------------------
+  Fetching URL: https://www.mtn.co.za/
+  ✓ Fetched 1584 characters from: MTN | Shop the Latest Phones & Devices
+✓ Success!
+  Title: MTN | Shop the Latest Phones & Devices
+  URL: https://www.mtn.co.za/
+  Text length: 1584 characters
+  First 200 chars: MTN | Shop the Latest Phones & Devices
+Binge without
+the buffer.
+Home Internet from
+R295 PM.
+Cancel anytime, zero hassles.
+R329?
+Nah.
+Pay R319 PM
+with us.
+Huawei nova 14i. Brand new and
+built to impre...
+
+TEST 2: Fetching multiple URLs with formatting
+--------------------------------------------------------------------------------
+
+📊 Fetching competitor insights from 2 URLs...
+  Fetching URL: https://www.mtn.co.za/
+  ✓ Fetched 1584 characters from: MTN | Shop the Latest Phones & Devices
+  Fetching URL: https://www.vodacom.co.za/
+  ✓ Fetched 1334 characters from: Cellphone Deals | Buy Smartphone Devices & Data | Vodacom
+✓ Formatted insights generated!
+
+First 500 characters of formatted output:
+--------------------------------------------------------------------------------
+================================================================================
+COMPETITOR & RESEARCH INSIGHTS
+================================================================================
+
+[Source 1: MTN | Shop the Latest Phones & Devices]
+URL: https://www.mtn.co.za/
+--------------------------------------------------------------------------------
+MTN | Shop the Latest Phones & Devices
+Binge without
+the buffer.
+Home Internet from
+R295 PM.
+Cancel anytime, zero hassles.
+R329?
+Nah.
+Pay R319 PM
+
+...
+
+Total insights length: 3458 characters
+
+================================================================================
+TEST COMPLETE
+================================================================================

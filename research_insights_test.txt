@@ -1,0 +1,236 @@
+================================================================================
+RESEARCH URLs TEST RESULTS
+================================================================================
+
+Research URLs tested:
+1. https://blog.hootsuite.com/youtube-marketing/
+2. https://www.wordstream.com/blog/ws/2023/11/07/facebook-ad-benchmarks
+3. https://www.hubspot.com/marketing-statistics
+4. https://sproutsocial.com/insights/video-marketing-statistics/
+
+================================================================================
+
+================================================================================
+COMPETITOR & RESEARCH INSIGHTS
+================================================================================
+
+[Source 1: YouTube Marketing in 2024: How To Get Started]
+URL: https://blog.hootsuite.com/youtube-marketing/
+--------------------------------------------------------------------------------
+YouTube Marketing in 2024: How To Get Started
+Skip to content
+Table of Contents
+What is YouTube marketing?
+10-step YouTube marketing strategy
+5 YouTube marketing tools
+83% of adults in the U.S. are on YouTube
+, and people watch over a billion hours of content each day. That means your business has a huge opportunity to reach your audience via YouTube marketing.
+But shouting from the rooftops about your products without a plan won’t get you anywhere. You need a strategy to succeed — and that’s exactly what you’ll find here. Keep reading to find the 10 steps to crush YouTube marketing in 2024.
+Bonus:
+Download the
+free 30-day plan to grow your YouTube following fast
+,
+a daily workbook of challenges that will help you kickstart your Youtube channel growth and track your success. Get real results after one month.
+What is YouTube marketing?
+YouTube marketing is the practice of promoting a brand, product, or service on YouTube. It can involve a mix of tactics, including (but not limited to):
+Creating organic promotional videos
+Working with influencers
+Advertising on the platform
+To
+market your business on YouTube
+— whether you’re an entrepreneur or an enterprise corporation — you need to produce what your target customers want.
+Sounds simple, right? It is, as long as you know what your customers really want, not just what you
+think
+they want (a trap far too many businesses fall into).
+Plus, you need to make sure the right people find your videos. YouTube is a search engine so you’ll need to optimize your content for the
+YouTube algorithm
+, just like you do for Google SEO.
+But why is YouTube marketing so important for your business to invest in?
+Let’s cover a few major benefits that YouTube can provide.
+Reach a major audience.
+YouTube is the second-most visited website
+in the world
+. Its users spend an average of 28 hours per month streaming content on the website. And four in five internet users have used this platform at one time or another. Find even more
+important stats in our roundup
+that prove just how valuable YouTube can be for business.
+Video content sells.
+One video marketing survey found that
+90% of marketers
+have gotten a positive ROI from video. And 88% of marketers have found that video helps their audience better understand their product or service.
+Your videos can appear in search results.
+Not only do you need to pay attention to
+YouTube SEO
+, but by considering Google search results, your videos can reach an even wider audience.
+Take advantage of YouTube monetization.
+Once you’ve built a solid audience, you can make even more money from the ads that appear on your videos.
+Now, without further ado, here is your complete, step-by-step checklist for how to successfully promote your business on YouTube.
+#1 Social Media Tool
+Create. Schedule. Publish. Engage. Measure. Win.
+Free 30-Day Trial
+10-step YouTube marketing strategy
+Follow along with these 10 steps to create your business’s YouTube marketing strategy and start promoting your products or services with high-quality video content.
+Step 1: Create a YouTube channel for your business
+First things first, you have to
+create a YouTube channel
+.
+Since YouTube is part of Google, you’ll need to create a Google account first to sign up for a YouTube channel. You can use an existing account or create one just for managing your business channel.
+Here’s how to get up and running:
+Create a Google account. Or, if you’re a Google Workspace user, use your admin account or create a YouTube-specific account.
+Go to YouTube.com and click the
+profile photo
+in the top right corner.
+Click
+Create a channel
+at the top of the dropdown menu that appears.
+Enter your business name and handle and upload your logo as your profile photo in the popup that appears before clicking
+Create channel
+. (If you’re not sure if you want to use your business name as your channel name, consider using our
+YouTube channel name generator
+for some inspiration.)
+From there, you’ll be taken to your brand-new YouTube channel!
+Click
+Customize channel
+to start branding it and inputting key information you’ll need to share with your audience if you hope to gain any subscribers.
+To fully complete and brand your new YouTube channel, fill out the following details in each tab:
+Basic info:
+Name
+Handle
+Pronouns (only if you’re a solopreneur)
+Description
+Channel URL
+External links
+Contact information
+Branding:
+Profile picture
+Channel art/banner image
+Video watermark
+Layout:
+Video spotlight
+Featured section(s)
+Here’s an example of a fully branded YouTube channel so you can get an idea of what to expect once you’re finished:
+Check out our
+step-by-step walkthrough to create a YouTube account
+for more details.
+Now we’re ready to tackle your YouTube video marketing strategy.
+Step 2: Learn what your audience likes
+Alright, now for the tough stuff. What does your audience really want?
+To figure this out, you need to answer two questions:
+Who are you making videos for?
+What are they already watching on YouTube?
+To s
+
+... (truncated, 18087 more characters)
+
+[Source 2: Failed to fetch]
+URL: https://www.wordstream.com/blog/ws/2023/11/07/facebook-ad-benchmarks
+Error: 404 Client Error: Not Found for url: https://www.wordstream.com/blog/ws/2023/11/07/facebook-ad-benchmarks
+
+[Source 3: 2025 Marketing Statistics, Trends & Data ]
+URL: https://www.hubspot.com/marketing-statistics
+--------------------------------------------------------------------------------
+2025 Marketing Statistics, Trends & Data
+Logo - Full (Color)
+Marketing Statistics Every Team Needs to Grow in 2025
+To be an effective marketer, you must keep up with the latest marketing statistics so you can better reach your target audience and boost conversions.
+Download HubSpot's State of Marketing Report
+Menu
+Scroll Left
+Scroll Right
+facebook
+linkedin
+twitter
+The marketing world is dynamic and ever-changing. The latest trends, technologies, and tactics are never stagnant. Keeping an eye on the newest marketing statistics is critical to stay ahead.
+As the former head of marketing for two different tech companies, I’ve learned that staying on top of the latest numbers is essential to the success of any business.
+Whether you’re focused on content marketing, advertising, or marketing tech, I’ve collected the stats you need to connect with your customers. I’ll also dive into
+search engine optimization
+, or SEO, so you can see how consumers find information about your brand online. With this info, you can increase your website’s visibility on search engine results pages (SERPs).
+The following marketing statistics will help you fine-tune your SEO strategy, increase website traffic, and boost conversions.
+Search Engine Optimization Statistics
+Search engine optimization
+, or SEO, allows you to understand and optimize how consumers find information about your brand and your competitors online. By incorporating SEO strategies in your marketing efforts, you’ll increase your website’s visibility and rankings on search engine results pages (SERPs).
+The following SEO marketing statistics will help you fine-tune your SEO strategy, increase website traffic, and boost conversions.
+Conversion Rate Optimization (CRO)
+More than one in three marketing leaders cite conversion rates as a top KPI that they prioritize tracking ( (
+HubSpot State of Marketing Report
+, 2023).
+Nearly two out of three marketers report that their average landing page conversion rate is less than 10% (
+HubSpot State of Marketing Report
+, 2023).
+In 2024, the top marketing channels driving ROI for B2B brands were their (1) website, blog, and SEO efforts, (2) paid social media content, and (3) social media shopping tools. (
+HubSpot State of Marketing Report
+, 2025).
+For B2C brands, the channels with the best ROI were (1) email marketing, (2) paid social media content, and (3) content marketing. (
+HubSpot State of Marketing Report
+, 2025).
+The average website has a bounce rate of 37% and an SEO click-through rate of 13% (
+HubSpot State of Marketing Report
+, 2023).
+The average conversion rate across all e-commerce sites is under 2% (
+Statista
+, 2025).
+Conversion rates are highest for health and beauty online shopping at 2.7% and lowest for luxury handbags at just 0.4% (
+Statista
+, 2023).
+Email marketing is one of the most effective channels for driving conversions, with a 2.8% conversion rate for B2C brands and a 2.4% conversion rate for B2Bs (
+FirstPageSage, 2025
+).
+Mobile Search
+63% of consumers prefer to find information about brands and products on mobile devices (
+HubSpot State of Consumer Trends
+, 2024).
+Most marketers report that mobile devices account for over half of their annual traffic (
+HubSpot Web Strategy & Analytics Report
+, 2023).
+The average U.S. household had 21 connected devices (
+Deloitte
+, 2023).
+Google accounts for over 93.9% of global mobile search market share (
+StatCounter
+, 2025).
+Organic Search
+32.9% of internet users aged 16+ discover new brands, products, and services via search engines. (
+DataReportal
+, 2025).
+75% of marketers believe that AI-enabled search engines will positively impact their blogs, and 68% predict that their site will get more traffic. Only 9% believe this will harm blog traffic (
+HubSpot State of Marketing Report
+, 2023).
+39% of marketers list optimizing on-page content based on keywords as their top SEO strategy (
+HubSpot State of Marketing Report
+, 2023).
+80% of Gen Z, 62% of millennials, 66% of Gen X, 35% of Boomers, and 52% of the general population primarily use mobile search (
+HubSpot State of Marketing Report
+, 2023).
+29% of marketers list SEO as a top trend they leverage (
+HubSpot State of Marketing Report
+, 2023).
+Voice Search
+13% of marketers use voice search optimization (Alexa, Siri, etc.) in their marketing strategy. (
+HubSpot Marketing Trends Report
+, 2024).
+20.5% of the global population used voice search in Q2 of 2024 (
+DemandSage
+, 2025).
+Over one in three Americans owns a smart speaker (
+Edison Research
+, 2023).
+E-commerce
+Smartphones account for over 77% of retail website visits worldwide (
+Statista
+, 2024).
+E-commerce accounts for over 20.1% of all global retail sales (
+Statista
+, 2024).
+Amazon is the top e-commerce platform in traffic and gross merchandise value globally, with Pinduoduo, Alibaba’s Taobao, and Tmall leading in gross merchandise value in Asia. (
+Statista,
+2024).
+Want to access statistics like this and more?
+Download our latest report
+.
+Want more data?
+Download the latest 
+
+... (truncated, 31138 more characters)
+
+[Source 4: Failed to fetch]
+URL: https://sproutsocial.com/insights/video-marketing-statistics/
+Error: 404 Client Error: Not Found for url: https://sproutsocial.com/insights/video-marketing-statistics/

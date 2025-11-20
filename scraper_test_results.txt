@@ -1,0 +1,304 @@
+================================================================================
+DASHBOARD EXTRACTION TEST RESULTS
+================================================================================
+URL: https://lookerstudio.google.com/reporting/ae967ece-bc34-426f-97f7-b28f7eae801e/page/p_yv5ggm2yrc
+Extracted: 2025-11-09 08:42:19
+
+================================================================================
+KEY METRICS & KPIs
+================================================================================
+1. Spend: No data
+2. Clicks: No data
+3. CTR%: No data
+4. CPC: No data
+5. Impressions: No data
+6. Completed Views: No data
+7. cVTR: No data
+8. eCPCV: R0
+9. Spend
+10. Clicks
+11. CTR%
+12. CPC
+13. Impressions
+14. Completed Views
+15. cVTR
+16. eCPCV
+
+================================================================================
+OCR EXTRACTED TEXT (from images/canvas)
+================================================================================
+
+[initial_view] (2048 characters):
+--------------------------------------------------------------------------------
+Fa)    MTN | CBU | Springboks August 2022                                                                                                                                                                                                                                               — Reset           &t Share +       @)       (23)
+075                                                                                                                                                                                                                                                               075
+
+wy                                                                                                                         os                                                                                                                                                                                                                                                               05
+
+Mobiclicks TV Syne                                                                                0.25                                                                                                                                                                                                                                        0.25
+
+YouTube Trueview                                                                               CO
+
+YouTube Bumper
+
+IOL SPORT HPTO                                                                                                                                                                                                                                                               Fi
+
+‘Date = Placement Spend GTR impressions, CPM licks Completed Views eVTR_eCPCV
+
+IOL MOTORING HPTO                                                                                                                                                                          No data
+
+Copy of HPTO
+
+Copy of Copy of HPTO
+
+Copy of Copy of Copy of HP...
+
+<
+
+
+[tab_keyboard_arrow_left] (601 characters):
+--------------------------------------------------------------------------------
+© MTNICBU| Springboks August 2022                                                                       2 Share ~ ( A )  (23)
+075                                                                    075
+1                         05                                                                    05
+2                         0.25                                                                    0.25
+3                                     a.
+4
+5
+‘Date = Placement Spend GTR impressions, CPM licks Completed Views eVTR_eCPCV
+6                                                          No data
+7
+8
+9
+>
+
+
+[tab_VIU] (601 characters):
+--------------------------------------------------------------------------------
+© MTNICBU| Springboks August 2022                                                                       2 Share ~ ( A )  (23)
+075                                                                    075
+1                         05                                                                    05
+2                         0.25                                                                    0.25
+3                                     a.
+4
+5
+‘Date = Placement Spend GTR impressions, CPM licks Completed Views eVTR_eCPCV
+6                                                          No data
+7
+8
+9
+>
+
+
+[tab_Mobiclicks TV Sync] (5225 characters):
+--------------------------------------------------------------------------------
+© MTN|CBU| Springboks August 2022                                                                                                                                                                    & Share ~ (i )    (23)
+100                                                                                                                                        20
+1
+0                                                                                                                                        0
+
+2                                                         Sep 1,2022 Sep2,2022  Sep3, 2022 Sep4,2022  Sep5,2022 Sep6, 2022 Sep7,2022  Sep8, 2022 Sep9,2022 Sep 10,2022 Sep 1, 2022
+
+3
+
+‘                                         (Date+ Placement. === Spend Reach impressions == Views CompletedViews, licks, CTR
+
+5                                                                     Sep 1,2022                Facebook                                   RIs78                     12010                     12620                       1781                         448                          24                        001
+Sep 1, 2022              GDN                                    3.562                      nul                   23,492                      nul                      nul                       33                        °
+
+6                                          Sep 2, 2022         GDN                         6627               null             53.012               null               null               187                 o
+Sep 2,2022         Facebook                       Ret              6016              6.249              1113               282                6               oot
+
+7                                                            Sep 3, 2022              GDN                                    3,361                      null                   26,888                      null                      null                       93.                        0
+
+8                                               Sep 3, 2022           Facebook                        2.068               16314               16.546                1376                 363                 116                 oot
+Sep 4, 2022         Facebook                       Reo              6a16              7425               623               195                e               oot
+
+9                                          Sep 4, 2022         GDN                         2.953               nul             73.623               nul               nul                64                 0
+Sep 6, 2022         GON                            Ro               mul                 0               nul               nul                 0                 0
+Sep 6, 2022         Facebook                        Ro                 0                 0                 0                 0                 0                 0
+Sep 6, 2022         Facebook                        Ro                 0                 0                 0                 0                 0                 0
+Sep 6, 2022         GON                            Ro               mul                 0               nul               nul                 0                 0
+Sep 7, 2022           GDN                            4.960                 nul               39.676                 nul                 nul                  38                   °
+Sep 7, 2022           Facebook                        2.240               17817               17918                1.826                 465                 104                 oot
+Sep 8, 2022         GDN                         Ra688               nul             37,503               nul               nul                3                 °
+Sep 8, 2022         Facebook                     R693             13,327             13,540              1.440               365                n               oot
+Sep 9, 2022           Facebook                        2.982               73,058               73.857                3.529                1012                 113                   °
+Sep 9, 2022           GDN                            R666                 nul               13,330                 nul                 nul                  61                   °
+Sep 10, 2022             GDN                                      Ri215                       nul                     9723                       nul                       nul                        2                         °
+Sep 10, 2022               Facebook                                     2,066                      16,251                       16.531                        1341                          327                           86                         oot
+Sep 11,2022              GDN                                        2.590                        nul                     20719                        nul                        nul                        147                       oot
+Sep 11,2022             Facebook                                 Raza                    2.548                    2.590                      3m                      101                        9                        °
+
+>
+
+
+[tab_YouTube Trueview] (1101 characters):
+--------------------------------------------------------------------------------
+® MTN CBU| Springboks August 2022                                                                                                                                                  & share ~      :      (23)
+1
+{MM Complete Views (Video) —— cpev
+2                                      1                                                                                                                                       1
+3                                    ars                                                                                                                                       ors
+os                                                                                                                                       05
+4
+5                                    02s                                                                                                                                       025
+9) ="
+6
+7
+8
+9                                                                                                                                Device by Impressions
+No data
+No data
+>
+
+
+[tab_YouTube Bumper] (1101 characters):
+--------------------------------------------------------------------------------
+® MTN CBU| Springboks August 2022                                                                                                                                                  & share ~      :      (23)
+1
+{MM Complete Views (Video) —— cpev
+2                                      1                                                                                                                                       1
+3                                    ars                                                                                                                                       ors
+os                                                                                                                                       05
+4
+5                                    02s                                                                                                                                       025
+9) ="
+6
+7
+8
+9                                                                                                                                Device by Impressions
+No data
+No data
+>
+
+
+[tab_IOL SPORT HPTO] (3659 characters):
+--------------------------------------------------------------------------------
+;                                                                                                                                                                                                                                                               CO)
+¢                                                                                                                                                                                                                                                               A
+MTN | CBU | Springboks August 2022                                                                                            = Reset    & share ~ (i )   (23)
+ro)           |        | Spring           ig                                                                                                                                                                                                                                                           Ne,
+Line Item                                                    Total impressions ~                        Total clicks                    cTR                       View ability
+|                                                                        MIN CBU Springboks HPTO's_Sport_1Sept 22                                               232,976                                          306                        0.13%                                     49.19%
+2
+3
+4
+5                                                                                         Grand total                                                                                                                232,976                                                     306                              0.13%                                               49.19%
+6                                                                                                                                                                                                                                            1-1/1 & >
+7                                                      Ad Units Performance
+8
+Ad Units                                              Total impressions +                     Total clicks                 cTR                    Viewability
+7                                               IOL Sport                                                             232,976                            306                0.13%                        49.19%
+Grand total                                                                                                                232,976                                                     306                              0.13%                                               49.19%
+1-1/1    <     >
+Device Category Performance
+Device
+——
+_ Device category                       Total impressions ~          Total clicks         CTR ——_Viewability
+‘Smartphone                                    175,122               278      0.16%           48.18%
+Desktop                                                    54,499                    22        0.04%              52.56%
+Tablet                                                                                   3,345                                6            0.18%                     47.04%
+>                                                                                                                                                                               Connected TV                                                                  10                             0              0%                   55.56%
+
+
+[tab_IOL MOTORING HPTO] (1647 characters):
+--------------------------------------------------------------------------------
+‘                                                                                                                                                                                  (2
+© MTN|CBU| Springboks August 2022                                                                             i Reset    &t Share ~ (i: )
+ro)     |    | Spring      ig                                                                                                                              Ne,   @
+
+YG,
+1                                     113,987
+2
+3                                                 Line Item Breakdown
+4                                             Line Item                                            Total impressions ~                    Total clicks                 CTR                   Viewability
+MTN CBU Springboks HPTO's.Motoring_1 Sept 22                                             113,987                                             120                          0.11%                                            6%
+5
+6
+7
+8
+Grand total                                      113,987                  120          0.11%                 46%
+9
+1-141 >
+Ad Units Performance
+Ad Units                                             Total impressions +                    Total clicks                 cTR                   Viewability
+1OL Motoring                                     113987                  120          0.11%                 46%
+Grand total                                      113,987                  120          0.11%                 46%
+rari 2 ¥
+Device Category Performance
+>                                         Device
+
+
+[tab_Copy of HPTO] (3739 characters):
+--------------------------------------------------------------------------------
+® MTN CBU| Springboks August 2022                                                                                                                                                                                                                                               1 Reset           Bt Share +       @)       (23)
+booked Impressions                                          Viewabllity                                          Inview lime (s)
+9
+1                                                            300 000                    83.46%                     44.91
+2
+3
+4
+5                                                                                                                      ee _______________________________
+é
+;                                                   Sport24 | App | Rugby Section Takeover 26 August
+Line item                                                                                                                  Total impressions                   Clicks                                          CTR(%)                Viewabilty          In-View Time
+8                                                                        ‘App Section Sponsorship | Sport24 | Rugby | 26 August(23949)                                    20 17:                                             88.50%                    30.89
+9
+Grand total                                                                                                                  68,202                                       178                                                   0.26%                       88.50%                        30.89
+Sport24 | Mobile | Homepage Takeover 26 August
+Line item                                                                                                                  Total impressions                   Clicks                                          CTR (%)                Viewabilty          In-View Time
+‘Sport24 | Mobile Web | HPTO | 26 August (23951)                                                     313 153                                               79.19%                     19.04
+Grand total                                                                                           31,351                                153                                        0.49%                  79.19%                   19.04
+Sport24 | Mobile | Homepage Takeover 2 September
+Line item                                                                                                                  Total impressions                   Clicks                                          CTR (%)                Viewabilty          In-View Time
+‘Sport24 | Mobile | HPTO | 2 September (23956)                                                       295 11                                             76.34%                    19:11  |
+Grand total                                                                                                     29,531                                   181                                             0.61%                    76.34%                     19.11  |
+ADDITIONAL STATS
+Best Performing Time                                                                          Best Performing Day Based on CTR
+>                                                                                   — Ad server CTR                                                                                                              HBB Ad server cTR
+08% |                                                                                                                       ee                                                                                                       |
+
+
+[tab_Copy of Copy of HPTO] (142 characters):
+--------------------------------------------------------------------------------
+Fa) MTN | CBU | Springboks August 2022                                                      i> Reset  & Share ~  @)  (23)
+1
+2
+3
+4
+5
+6
+7
+8
+9
+>
+
+
+[tab_Copy of Copy of Copy of HPTO] (142 characters):
+--------------------------------------------------------------------------------
+Fa) MTN | CBU | Springboks August 2022                                                      i> Reset  & Share ~  @)  (23)
+1
+2
+3
+4
+5
+6
+7
+8
+9
+>
+
+================================================================================
+EXPLORED TABS/PAGES
+================================================================================
+Navigated through 10 tabs: keyboard_arrow_left, VIU, Mobiclicks TV Sync, YouTube Trueview, YouTube Bumper, IOL SPORT HPTO, IOL MOTORING HPTO, Copy of HPTO, Copy of Copy of HPTO, Copy of Copy of Copy of HPTO
+
+================================================================================
+EXTRACTION SUMMARY
+================================================================================
+Total tables: 0
+Total metrics: 16
+Total charts: 1
+Total filters: 4
+Total OCR extractions: 11 (20006 characters)
