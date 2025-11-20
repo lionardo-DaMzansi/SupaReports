@@ -914,58 +914,24 @@ def signup():
         if username and User.query.filter_by(username=username).first():
             return jsonify({"error": "Username already taken"}), 400
 
-        # Create new user
+        # Create new user (auto-verified - email verification disabled)
         user = User(
             email=email,
             username=username or email.split('@')[0],
-            verified=False
+            verified=True  # Auto-verify on signup
         )
         user.set_password(password)
-        verification_token = user.generate_verification_token()
 
         db.session.add(user)
         db.session.commit()
 
-        # Send verification email
-        try:
-            verification_url = f"{request.host_url}api/auth/verify/{verification_token}"
-            msg = Message(
-                subject="Verify Your Supa Reports Account",
-                recipients=[email],
-                html=f"""
-                <html>
-                <body style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
-                    <div style="max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px;">
-                        <h2 style="color: #333;">Welcome to Supa Reports!</h2>
-                        <p>Thank you for signing up. Please verify your email address by clicking the button below:</p>
-                        <p style="text-align: center; margin: 30px 0;">
-                            <a href="{verification_url}"
-                               style="background-color: #4CAF50; color: white; padding: 12px 30px;
-                                      text-decoration: none; border-radius: 5px; display: inline-block;">
-                                Verify Email
-                            </a>
-                        </p>
-                        <p style="color: #666; font-size: 12px;">
-                            If the button doesn't work, copy and paste this link into your browser:<br>
-                            <a href="{verification_url}">{verification_url}</a>
-                        </p>
-                        <p style="color: #666; font-size: 12px;">
-                            This verification link will expire in 24 hours.
-                        </p>
-                    </div>
-                </body>
-                </html>
-                """
-            )
-            mail.send(msg)
-        except Exception as e:
-            print(f"Error sending verification email: {e}")
-            # Don't fail signup if email fails
-            pass
+        # Email verification disabled for Railway deployment
+        # (SMTP often blocked on cloud platforms)
+        print(f"✓ New user created: {email} (auto-verified)")
 
         return jsonify({
             "success": True,
-            "message": "Account created! Please check your email to verify your account.",
+            "message": "Account created successfully! You can now log in.",
             "email": email
         }), 201
 
@@ -1049,12 +1015,8 @@ def login():
         if not user or not user.check_password(password):
             return jsonify({"error": "Invalid email or password"}), 401
 
-        # Check if email is verified
-        if not user.verified:
-            return jsonify({
-                "error": "Email not verified",
-                "message": "Please check your email and verify your account before logging in."
-            }), 403
+        # Email verification check removed (auto-verify enabled)
+        # All accounts are verified on signup
 
         # Check for existing active session and deactivate it
         # This allows the user to login even if logout didn't complete properly
