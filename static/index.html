@@ -2469,6 +2469,25 @@
                     </div>
                 </div>
 
+                <!-- Admin Panel (only visible to admins) -->
+                <div class="form-section" id="adminPanelSection" style="margin-top: 1.5rem; display: none;">
+                    <div class="form-section-title">👑 Admin Panel</div>
+
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <strong>Pending Approvals</strong>
+                            <button class="btn-download" onclick="refreshPendingUsers()" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">🔄 Refresh</button>
+                        </div>
+                        <div id="pendingUsersList" style="margin-top: 1rem;">
+                            <div style="text-align: center; color: #999; padding: 1rem;">Loading...</div>
+                        </div>
+                    </div>
+
+                    <button class="btn-download" onclick="viewAllUsers()" style="width: 100%; margin-top: 0.5rem;">
+                        👥 View All Users
+                    </button>
+                </div>
+
                 <div class="form-section" style="margin-top: 1.5rem; margin-bottom: 1rem;">
                     <button class="btn-primary compact-btn" onclick="saveSettings()" style="width: 100%;">💾 Save Settings</button>
                 </div>
@@ -4278,6 +4297,11 @@
             modal.classList.add('active');
             // Load current settings when opening
             loadSettings();
+            // Load admin panel if user is admin
+            if (currentUser && currentUser.is_admin) {
+                document.getElementById('adminPanelSection').style.display = 'block';
+                refreshPendingUsers();
+            }
         }
 
         // Close settings modal
@@ -4302,6 +4326,121 @@
                 }
             }
         });
+
+        // ============================================================================
+        // Admin Panel Functions
+        // ============================================================================
+
+        async function refreshPendingUsers() {
+            const listContainer = document.getElementById('pendingUsersList');
+            listContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 1rem;">Loading...</div>';
+
+            try {
+                const response = await fetch('/api/admin/pending-users');
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to fetch pending users');
+                }
+
+                if (data.pending_users.length === 0) {
+                    listContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 1rem;">No pending approvals</div>';
+                    return;
+                }
+
+                listContainer.innerHTML = data.pending_users.map(user => `
+                    <div style="background: rgba(255, 255, 255, 0.08); padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                        <div style="margin-bottom: 0.5rem;">
+                            <div style="font-weight: bold;">${user.email}</div>
+                            <div style="font-size: 0.85rem; color: #999;">@${user.username}</div>
+                            <div style="font-size: 0.8rem; color: #999;">Registered: ${new Date(user.created_at).toLocaleDateString()}</div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-primary compact-btn" onclick="approveUser(${user.id})" style="flex: 1; padding: 0.4rem;">✓ Approve</button>
+                            <button class="btn-download" onclick="rejectUser(${user.id})" style="flex: 1; padding: 0.4rem; background: #dc2626;">✗ Reject</button>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error fetching pending users:', error);
+                listContainer.innerHTML = '<div style="text-align: center; color: #dc2626; padding: 1rem;">Error loading users</div>';
+            }
+        }
+
+        async function approveUser(userId) {
+            if (!confirm('Approve this user?')) return;
+
+            try {
+                const response = await fetch('/api/admin/approve-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to approve user');
+                }
+
+                alert(`✓ User ${data.user.email} has been approved!`);
+                refreshPendingUsers();
+
+            } catch (error) {
+                console.error('Error approving user:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function rejectUser(userId) {
+            if (!confirm('Reject this user? This will delete their account and send them a notification email.')) return;
+
+            try {
+                const response = await fetch('/api/admin/reject-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, notify: true })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to reject user');
+                }
+
+                alert(`✓ ${data.message}`);
+                refreshPendingUsers();
+
+            } catch (error) {
+                console.error('Error rejecting user:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function viewAllUsers() {
+            try {
+                const response = await fetch('/api/admin/all-users');
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to fetch users');
+                }
+
+                const userList = data.users.map(user => {
+                    const status = user.verified ? '✓ Approved' : '⏳ Pending';
+                    const adminBadge = user.is_admin ? ' 👑 Admin' : '';
+                    const lastLogin = user.last_login ? new Date(user.last_login).toLocaleString() : 'Never';
+                    return `${user.email} (${user.username}) - ${status}${adminBadge} - Last login: ${lastLogin}`;
+                }).join('\n');
+
+                alert(`All Users (${data.users.length}):\n\n${userList}`);
+
+            } catch (error) {
+                console.error('Error fetching all users:', error);
+                alert('Error: ' + error.message);
+            }
+        }
 
         // Email template variables
         let currentGifUrl = null;

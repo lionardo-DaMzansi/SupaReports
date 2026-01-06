@@ -104,6 +104,19 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# Admin decorator
+def admin_required(f):
+    """Decorator to require admin privileges"""
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return jsonify({"error": "Authentication required"}), 401
+        if not current_user.is_admin:
+            return jsonify({"error": "Admin privileges required"}), 403
+        return f(*args, **kwargs)
+    return decorated_function
+
 # Update session activity on every request
 @app.before_request
 def update_session_activity():
@@ -914,25 +927,60 @@ def signup():
         if username and User.query.filter_by(username=username).first():
             return jsonify({"error": "Username already taken"}), 400
 
-        # Create new user (auto-verified - email verification disabled)
+        # Create new user (requires admin approval)
         user = User(
             email=email,
             username=username or email.split('@')[0],
-            verified=True  # Auto-verify on signup
+            verified=False  # Requires admin approval
         )
         user.set_password(password)
 
         db.session.add(user)
         db.session.commit()
 
-        # Email verification disabled for Railway deployment
-        # (SMTP often blocked on cloud platforms)
-        print(f"✓ New user created: {email} (auto-verified)")
+        # Send notification email to admin
+        try:
+            admin_email = os.getenv('ADMIN_EMAIL', 'admin@supachat.global')
+            app_url = os.getenv('APP_URL', 'http://localhost:5173')
+
+            msg = Message(
+                subject=f"New User Registration: {email}",
+                recipients=[admin_email],
+                html=f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #7c3aed;">New User Registration Pending Approval</h2>
+                    <p>A new user has registered and is awaiting approval:</p>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                        <p><strong>Email:</strong> {email}</p>
+                        <p><strong>Username:</strong> {username or email.split('@')[0]}</p>
+                        <p><strong>Registration Date:</strong> {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}</p>
+                    </div>
+                    <p>
+                        <a href="{app_url}"
+                           style="background-color: #7c3aed; color: white; padding: 12px 24px;
+                                  text-decoration: none; border-radius: 4px; display: inline-block;">
+                            Go to Admin Panel
+                        </a>
+                    </p>
+                    <p style="color: #666; font-size: 14px; margin-top: 20px;">
+                        Log in to your admin account to approve or reject this user.
+                    </p>
+                </div>
+                """
+            )
+            mail.send(msg)
+            print(f"✓ Admin notification sent for new user: {email}")
+        except Exception as e:
+            print(f"Warning: Could not send admin notification: {e}")
+            # Continue anyway - user is created
+
+        print(f"✓ New user created: {email} (pending approval)")
 
         return jsonify({
             "success": True,
-            "message": "Account created successfully! You can now log in.",
-            "email": email
+            "message": "Account created successfully! Your account is pending admin approval. You will receive an email once approved.",
+            "email": email,
+            "pending_approval": True
         }), 201
 
     except Exception as e:
@@ -1015,8 +1063,12 @@ def login():
         if not user or not user.check_password(password):
             return jsonify({"error": "Invalid email or password"}), 401
 
-        # Email verification check removed (auto-verify enabled)
-        # All accounts are verified on signup
+        # Check if user is approved by admin
+        if not user.verified:
+            return jsonify({
+                "error": "Account pending approval",
+                "message": "Your account is awaiting admin approval. You will receive an email once your account is approved."
+            }), 403
 
         # Check for existing active session and deactivate it
         # This allows the user to login even if logout didn't complete properly
@@ -1295,6 +1347,195 @@ def get_session_info():
         traceback.print_exc()
         return jsonify({"error": "Failed to get session info"}), 500
 
+
+# ============================================================================
+# Admin Routes
+# ============================================================================
+
+@app.route("/api/admin/pending-users", methods=["GET"])
+@admin_required
+def get_pending_users():
+    """Get all users pending approval"""
+    try:
+        pending_users = User.query.filter_by(verified=False).order_by(User.created_at.desc()).all()
+
+        return jsonify({
+            "success": True,
+            "pending_users": [{
+                "id": user.id,
+                "email": user.email,
+                "username": user.username,
+                "created_at": user.created_at.isoformat() if user.created_at else None
+            } for user in pending_users]
+        }), 200
+
+    except Exception as e:
+        print(f"Error fetching pending users: {e}")
+        traceback.print_exc()
+        return jsonify({"error": "Failed to fetch pending users"}), 500
+
+
+@app.route("/api/admin/approve-user", methods=["POST"])
+@admin_required
+def approve_user():
+    """Approve a pending user"""
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+
+        if not user_id:
+            return jsonify({"error": "user_id is required"}), 400
+
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        if user.verified:
+            return jsonify({"error": "User is already approved"}), 400
+
+        # Approve user
+        user.verified = True
+        db.session.commit()
+
+        # Send approval email to user
+        try:
+            app_url = os.getenv('APP_URL', 'http://localhost:5173')
+            msg = Message(
+                subject="Account Approved - Supa Reports",
+                recipients=[user.email],
+                html=f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #4CAF50;">✓ Your Account Has Been Approved!</h2>
+                    <p>Good news! Your account has been approved by our admin team.</p>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                        <p><strong>Email:</strong> {user.email}</p>
+                        <p><strong>Username:</strong> {user.username}</p>
+                    </div>
+                    <p>You can now log in and start using Supa Reports:</p>
+                    <p>
+                        <a href="{app_url}"
+                           style="background-color: #4CAF50; color: white; padding: 12px 24px;
+                                  text-decoration: none; border-radius: 4px; display: inline-block;">
+                            Log In Now
+                        </a>
+                    </p>
+                    <p style="color: #666; font-size: 14px; margin-top: 20px;">
+                        Welcome to Supa Reports!
+                    </p>
+                </div>
+                """
+            )
+            mail.send(msg)
+            print(f"✓ Approval email sent to: {user.email}")
+        except Exception as e:
+            print(f"Warning: Could not send approval email: {e}")
+            # Continue anyway - user is approved
+
+        return jsonify({
+            "success": True,
+            "message": f"User {user.email} has been approved",
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "username": user.username
+            }
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error approving user: {e}")
+        traceback.print_exc()
+        return jsonify({"error": "Failed to approve user"}), 500
+
+
+@app.route("/api/admin/reject-user", methods=["POST"])
+@admin_required
+def reject_user():
+    """Reject and delete a pending user"""
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id')
+        notify = data.get('notify', True)  # Send rejection email by default
+
+        if not user_id:
+            return jsonify({"error": "user_id is required"}), 400
+
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        if user.is_admin:
+            return jsonify({"error": "Cannot reject admin users"}), 400
+
+        user_email = user.email
+
+        # Send rejection email before deleting
+        if notify:
+            try:
+                msg = Message(
+                    subject="Account Registration - Supa Reports",
+                    recipients=[user_email],
+                    html=f"""
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #f44336;">Account Registration Update</h2>
+                        <p>Thank you for your interest in Supa Reports.</p>
+                        <p>Unfortunately, we are unable to approve your account registration at this time.</p>
+                        <p style="color: #666; font-size: 14px; margin-top: 20px;">
+                            If you believe this is an error, please contact our support team.
+                        </p>
+                    </div>
+                    """
+                )
+                mail.send(msg)
+                print(f"✓ Rejection email sent to: {user_email}")
+            except Exception as e:
+                print(f"Warning: Could not send rejection email: {e}")
+
+        # Delete user
+        db.session.delete(user)
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": f"User {user_email} has been rejected and removed"
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error rejecting user: {e}")
+        traceback.print_exc()
+        return jsonify({"error": "Failed to reject user"}), 500
+
+
+@app.route("/api/admin/all-users", methods=["GET"])
+@admin_required
+def get_all_users():
+    """Get all users (approved and pending)"""
+    try:
+        users = User.query.order_by(User.created_at.desc()).all()
+
+        return jsonify({
+            "success": True,
+            "users": [{
+                "id": user.id,
+                "email": user.email,
+                "username": user.username,
+                "verified": user.verified,
+                "is_admin": user.is_admin,
+                "created_at": user.created_at.isoformat() if user.created_at else None,
+                "last_login": user.last_login.isoformat() if user.last_login else None
+            } for user in users]
+        }), 200
+
+    except Exception as e:
+        print(f"Error fetching all users: {e}")
+        traceback.print_exc()
+        return jsonify({"error": "Failed to fetch users"}), 500
+
+
+# ============================================================================
+# User Profile Routes
+# ============================================================================
 
 @app.route("/api/user/profile-picture", methods=["POST"])
 @login_required
