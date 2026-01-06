@@ -1659,6 +1659,9 @@ def send_email():
                 "message": "Please configure SMTP_PASSWORD in .env file or use your email provider's app-specific password"
             }), 400
 
+        # Debug: Log SMTP configuration (without password)
+        print(f"SMTP Config: server={SMTP_SERVER}, port={SMTP_PORT}, user={smtp_user}")
+
         # Create message
         msg = MIMEMultipart('alternative')
         msg['From'] = from_email
@@ -1693,24 +1696,33 @@ def send_email():
             "recipients": to_emails
         })
 
-    except smtplib.SMTPAuthenticationError:
+    except smtplib.SMTPAuthenticationError as e:
+        error_msg = f"Authentication failed: {str(e)}"
+        print(error_msg)
         return jsonify({
             "error": "Authentication failed",
-            "message": "Invalid email credentials. For Gmail, use an app-specific password: https://support.google.com/accounts/answer/185833"
+            "message": "Invalid email credentials. For Gmail, use an app-specific password: https://support.google.com/accounts/answer/185833",
+            "details": str(e)
         }), 401
 
     except smtplib.SMTPException as e:
+        error_msg = f"SMTP error: {str(e)}"
+        print(error_msg)
+        traceback.print_exc()
         return jsonify({
             "error": "SMTP error",
-            "message": str(e)
+            "message": str(e),
+            "details": str(e)
         }), 500
 
     except Exception as e:
-        print(f"Error sending email: {str(e)}")
+        error_msg = f"Error sending email: {str(e)}"
+        print(error_msg)
         traceback.print_exc()
         return jsonify({
             "error": "Failed to send email",
-            "message": str(e)
+            "message": str(e),
+            "details": str(e)
         }), 500
 
 
