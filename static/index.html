@@ -4319,8 +4319,16 @@
                 pushBtn.textContent = 'Uploading to cloud...';
                 pushBtn.disabled = true;
 
+                // Check if URL is external (S3) and needs proxy
+                const isExternal = !currentVideoUrl.startsWith('blob:') && !currentVideoUrl.startsWith('/static/');
+                const fetchUrl = isExternal
+                    ? `/api/proxy-video?url=${encodeURIComponent(currentVideoUrl)}`
+                    : currentVideoUrl;
+
+                console.log('Fetching video for email upload:', isExternal ? 'using proxy' : 'direct');
+
                 // Convert blob URL to File object
-                const videoBlob = await fetch(currentVideoUrl).then(r => r.blob());
+                const videoBlob = await fetch(fetchUrl).then(r => r.blob());
                 const videoFile = new File([videoBlob], 'lipsync-video.mp4', { type: 'video/mp4' });
 
                 // Create FormData for upload
