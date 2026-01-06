@@ -3815,6 +3815,7 @@
 
                         // Update video source
                         videoSource.src = videoBlobUrl;
+                        videoSource.type = file.type || 'video/mp4';
                         videoPlayer.load();
 
                         // Show video player, hide placeholder
