@@ -32,6 +32,7 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 from models import db, User, Session, ActivityLog, UserStats, log_activity
+import resend
 
 # Load environment variables
 load_dotenv()
@@ -48,11 +49,20 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
 ALLOWED_EXTENSIONS = {'csv', 'xlsx', 'xls', 'pdf', 'txt', 'json'}
 
-# Email Configuration (optional - for sending emails directly)
+# Email Configuration
+# Resend API (for production/Railway)
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+
+# SMTP (fallback for local development)
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
 SMTP_USERNAME = os.getenv("SMTP_USERNAME", "")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
+
+# Configure Resend if API key is provided
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
+    print("✓ Resend API configured")
 
 # Cloudinary Configuration (for hosting media publicly)
 CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "")
@@ -116,6 +126,92 @@ def admin_required(f):
             return jsonify({"error": "Admin privileges required"}), 403
         return f(*args, **kwargs)
     return decorated_function
+
+# ============================================================================
+# Email Helper Functions
+# ============================================================================
+
+def send_email_via_resend(from_email, to_emails, subject, html_content):
+    """Send email using Resend API"""
+    try:
+        # Resend requires a verified sender domain
+        # Use the from_email as the "From" name, but send from your verified domain
+        params = {
+            "from": from_email,  # Will need to be a verified sender
+            "to": to_emails,
+            "subject": subject,
+            "html": html_content,
+        }
+
+        response = resend.Emails.send(params)
+        print(f"✓ Email sent via Resend: {response}")
+        return True, response
+    except Exception as e:
+        print(f"Resend error: {str(e)}")
+        return False, str(e)
+
+def send_email_via_smtp(from_email, to_emails, subject, html_content):
+    """Send email using SMTP (fallback for local development)"""
+    try:
+        smtp_user = SMTP_USERNAME if SMTP_USERNAME else from_email
+        smtp_pass = SMTP_PASSWORD
+
+        if not smtp_pass:
+            return False, "SMTP credentials not configured"
+
+        # Create message
+        msg = MIMEMultipart('alternative')
+        msg['From'] = from_email
+        msg['To'] = ', '.join(to_emails) if isinstance(to_emails, list) else to_emails
+        msg['Subject'] = subject
+
+        # Attach HTML content
+        html_part = MIMEText(html_content, 'html')
+        msg.attach(html_part)
+
+        # Try port 587 with STARTTLS first, fallback to port 465 with SSL
+        try:
+            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=10) as server:
+                server.starttls()
+                server.login(smtp_user, smtp_pass)
+                server.send_message(msg)
+            print(f"✓ Email sent via SMTP port {SMTP_PORT}")
+            return True, "Email sent via SMTP"
+        except (smtplib.SMTPException, TimeoutError, OSError) as smtp_error:
+            print(f"Port {SMTP_PORT} failed, trying SSL on port 465...")
+            with smtplib.SMTP_SSL(SMTP_SERVER, 465, timeout=10) as server:
+                server.login(smtp_user, smtp_pass)
+                server.send_message(msg)
+            print("✓ Email sent via SMTP SSL port 465")
+            return True, "Email sent via SMTP SSL"
+    except Exception as e:
+        print(f"SMTP error: {str(e)}")
+        return False, str(e)
+
+def send_email_helper(from_email, to_emails, subject, html_content):
+    """
+    Unified email sending function.
+    Uses Resend if configured, falls back to SMTP for local development.
+    """
+    # Ensure to_emails is a list
+    if isinstance(to_emails, str):
+        to_emails = [to_emails]
+
+    print(f"Sending email from {from_email} to {to_emails}...")
+
+    # Try Resend first if configured
+    if RESEND_API_KEY:
+        success, result = send_email_via_resend(from_email, to_emails, subject, html_content)
+        if success:
+            return True, result
+        print(f"Resend failed, falling back to SMTP: {result}")
+
+    # Fall back to SMTP
+    if SMTP_PASSWORD:
+        return send_email_via_smtp(from_email, to_emails, subject, html_content)
+
+    # No email service configured
+    return False, "No email service configured (need RESEND_API_KEY or SMTP credentials)"
 
 # Update session activity on every request
 @app.before_request
@@ -942,34 +1038,41 @@ def signup():
         try:
             admin_email = os.getenv('ADMIN_EMAIL', 'admin@supachat.global')
             app_url = os.getenv('APP_URL', 'http://localhost:5173')
+            from_email = os.getenv('MAIL_DEFAULT_SENDER', 'noreply@supachat.global')
 
-            msg = Message(
-                subject=f"New User Registration: {email}",
-                recipients=[admin_email],
-                html=f"""
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #7c3aed;">New User Registration Pending Approval</h2>
-                    <p>A new user has registered and is awaiting approval:</p>
-                    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                        <p><strong>Email:</strong> {email}</p>
-                        <p><strong>Username:</strong> {username or email.split('@')[0]}</p>
-                        <p><strong>Registration Date:</strong> {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}</p>
-                    </div>
-                    <p>
-                        <a href="{app_url}"
-                           style="background-color: #7c3aed; color: white; padding: 12px 24px;
-                                  text-decoration: none; border-radius: 4px; display: inline-block;">
-                            Go to Admin Panel
-                        </a>
-                    </p>
-                    <p style="color: #666; font-size: 14px; margin-top: 20px;">
-                        Log in to your admin account to approve or reject this user.
-                    </p>
+            html_content = f"""
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #7c3aed;">New User Registration Pending Approval</h2>
+                <p>A new user has registered and is awaiting approval:</p>
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                    <p><strong>Email:</strong> {email}</p>
+                    <p><strong>Username:</strong> {username or email.split('@')[0]}</p>
+                    <p><strong>Registration Date:</strong> {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}</p>
                 </div>
-                """
+                <p>
+                    <a href="{app_url}"
+                       style="background-color: #7c3aed; color: white; padding: 12px 24px;
+                              text-decoration: none; border-radius: 4px; display: inline-block;">
+                        Go to Admin Panel
+                    </a>
+                </p>
+                <p style="color: #666; font-size: 14px; margin-top: 20px;">
+                    Log in to your admin account to approve or reject this user.
+                </p>
+            </div>
+            """
+
+            success, result = send_email_helper(
+                from_email=from_email,
+                to_emails=[admin_email],
+                subject=f"New User Registration: {email}",
+                html_content=html_content
             )
-            mail.send(msg)
-            print(f"✓ Admin notification sent for new user: {email}")
+
+            if success:
+                print(f"✓ Admin notification sent for new user: {email}")
+            else:
+                print(f"Warning: Could not send admin notification: {result}")
         except Exception as e:
             print(f"Warning: Could not send admin notification: {e}")
             # Continue anyway - user is created
@@ -1167,32 +1270,40 @@ def request_password_reset():
 
             # Send password reset email
             try:
-                msg = Message(
+                from_email = os.getenv('MAIL_DEFAULT_SENDER', 'noreply@supachat.global')
+
+                html_content = f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #4CAF50;">Password Reset Request</h2>
+                    <p>You requested to reset your password. Click the button below to set a new password:</p>
+                    <p style="margin: 30px 0;">
+                        <a href="{reset_url}"
+                           style="background-color: #4CAF50; color: white; padding: 12px 24px;
+                                  text-decoration: none; border-radius: 4px; display: inline-block;">
+                            Reset Password
+                        </a>
+                    </p>
+                    <p style="color: #666;">This link will expire in 24 hours.</p>
+                    <p style="color: #666;">If you didn't request this, please ignore this email.</p>
+                    <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+                    <p style="color: #999; font-size: 12px;">
+                        If the button doesn't work, copy and paste this link:<br>
+                        <a href="{reset_url}">{reset_url}</a>
+                    </p>
+                </div>
+                """
+
+                success, result = send_email_helper(
+                    from_email=from_email,
+                    to_emails=[email],
                     subject="Reset Your Password - Supa Reports",
-                    recipients=[email],
-                    html=f"""
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                        <h2 style="color: #4CAF50;">Password Reset Request</h2>
-                        <p>You requested to reset your password. Click the button below to set a new password:</p>
-                        <p style="margin: 30px 0;">
-                            <a href="{reset_url}"
-                               style="background-color: #4CAF50; color: white; padding: 12px 24px;
-                                      text-decoration: none; border-radius: 4px; display: inline-block;">
-                                Reset Password
-                            </a>
-                        </p>
-                        <p style="color: #666;">This link will expire in 24 hours.</p>
-                        <p style="color: #666;">If you didn't request this, please ignore this email.</p>
-                        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
-                        <p style="color: #999; font-size: 12px;">
-                            If the button doesn't work, copy and paste this link:<br>
-                            <a href="{reset_url}">{reset_url}</a>
-                        </p>
-                    </div>
-                    """
+                    html_content=html_content
                 )
-                mail.send(msg)
-                print(f"Password reset email sent to {email}")
+
+                if success:
+                    print(f"Password reset email sent to {email}")
+                else:
+                    print(f"Warning: Could not send password reset email: {result}")
             except Exception as e:
                 print(f"Error sending reset email: {e}")
                 # Continue anyway - don't reveal if email failed
@@ -1400,33 +1511,41 @@ def approve_user():
         # Send approval email to user
         try:
             app_url = os.getenv('APP_URL', 'http://localhost:5173')
-            msg = Message(
-                subject="Account Approved - Supa Reports",
-                recipients=[user.email],
-                html=f"""
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #4CAF50;">✓ Your Account Has Been Approved!</h2>
-                    <p>Good news! Your account has been approved by our admin team.</p>
-                    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                        <p><strong>Email:</strong> {user.email}</p>
-                        <p><strong>Username:</strong> {user.username}</p>
-                    </div>
-                    <p>You can now log in and start using Supa Reports:</p>
-                    <p>
-                        <a href="{app_url}"
-                           style="background-color: #4CAF50; color: white; padding: 12px 24px;
-                                  text-decoration: none; border-radius: 4px; display: inline-block;">
-                            Log In Now
-                        </a>
-                    </p>
-                    <p style="color: #666; font-size: 14px; margin-top: 20px;">
-                        Welcome to Supa Reports!
-                    </p>
+            from_email = os.getenv('MAIL_DEFAULT_SENDER', 'noreply@supachat.global')
+
+            html_content = f"""
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #4CAF50;">✓ Your Account Has Been Approved!</h2>
+                <p>Good news! Your account has been approved by our admin team.</p>
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                    <p><strong>Email:</strong> {user.email}</p>
+                    <p><strong>Username:</strong> {user.username}</p>
                 </div>
-                """
+                <p>You can now log in and start using Supa Reports:</p>
+                <p>
+                    <a href="{app_url}"
+                       style="background-color: #4CAF50; color: white; padding: 12px 24px;
+                              text-decoration: none; border-radius: 4px; display: inline-block;">
+                        Log In Now
+                    </a>
+                </p>
+                <p style="color: #666; font-size: 14px; margin-top: 20px;">
+                    Welcome to Supa Reports!
+                </p>
+            </div>
+            """
+
+            success, result = send_email_helper(
+                from_email=from_email,
+                to_emails=[user.email],
+                subject="Account Approved - Supa Reports",
+                html_content=html_content
             )
-            mail.send(msg)
-            print(f"✓ Approval email sent to: {user.email}")
+
+            if success:
+                print(f"✓ Approval email sent to: {user.email}")
+            else:
+                print(f"Warning: Could not send approval email: {result}")
         except Exception as e:
             print(f"Warning: Could not send approval email: {e}")
             # Continue anyway - user is approved
@@ -1472,22 +1591,30 @@ def reject_user():
         # Send rejection email before deleting
         if notify:
             try:
-                msg = Message(
+                from_email = os.getenv('MAIL_DEFAULT_SENDER', 'noreply@supachat.global')
+
+                html_content = f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #f44336;">Account Registration Update</h2>
+                    <p>Thank you for your interest in Supa Reports.</p>
+                    <p>Unfortunately, we are unable to approve your account registration at this time.</p>
+                    <p style="color: #666; font-size: 14px; margin-top: 20px;">
+                        If you believe this is an error, please contact our support team.
+                    </p>
+                </div>
+                """
+
+                success, result = send_email_helper(
+                    from_email=from_email,
+                    to_emails=[user_email],
                     subject="Account Registration - Supa Reports",
-                    recipients=[user_email],
-                    html=f"""
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                        <h2 style="color: #f44336;">Account Registration Update</h2>
-                        <p>Thank you for your interest in Supa Reports.</p>
-                        <p>Unfortunately, we are unable to approve your account registration at this time.</p>
-                        <p style="color: #666; font-size: 14px; margin-top: 20px;">
-                            If you believe this is an error, please contact our support team.
-                        </p>
-                    </div>
-                    """
+                    html_content=html_content
                 )
-                mail.send(msg)
-                print(f"✓ Rejection email sent to: {user_email}")
+
+                if success:
+                    print(f"✓ Rejection email sent to: {user_email}")
+                else:
+                    print(f"Warning: Could not send rejection email: {result}")
             except Exception as e:
                 print(f"Warning: Could not send rejection email: {e}")
 
@@ -1626,6 +1753,7 @@ def send_email():
     """
     Send HTML email to recipients.
     Accepts JSON with: from_email, to_emails (list), subject, html_content
+    Uses Resend API (preferred) or SMTP (fallback for local dev)
     """
     try:
         data = request.get_json()
@@ -1648,72 +1776,28 @@ def send_email():
         if not html_content:
             return jsonify({"error": "html_content is required"}), 400
 
-        # If SMTP credentials are configured, use them
-        # Otherwise, use the from_email as sender (requires app-specific password)
-        smtp_user = SMTP_USERNAME if SMTP_USERNAME else from_email
-        smtp_pass = SMTP_PASSWORD
-
-        if not smtp_pass:
+        # Check if any email service is configured
+        if not RESEND_API_KEY and not SMTP_PASSWORD:
             return jsonify({
-                "error": "Email credentials not configured",
-                "message": "Please configure SMTP_PASSWORD in .env file or use your email provider's app-specific password"
+                "error": "Email service not configured",
+                "message": "Please configure RESEND_API_KEY or SMTP credentials"
             }), 400
 
-        # Debug: Log SMTP configuration (without password)
-        print(f"SMTP Config: server={SMTP_SERVER}, port={SMTP_PORT}, user={smtp_user}")
+        # Send email using helper function
+        success, result = send_email_helper(from_email, to_emails, subject, html_content)
 
-        # Create message
-        msg = MIMEMultipart('alternative')
-        msg['From'] = from_email
-        msg['To'] = ', '.join(to_emails)
-        msg['Subject'] = subject
-
-        # Attach HTML content
-        html_part = MIMEText(html_content, 'html')
-        msg.attach(html_part)
-
-        # Send email
-        print(f"Sending email from {from_email} to {to_emails}...")
-
-        # Try port 587 with STARTTLS first, fallback to port 465 with SSL
-        try:
-            with smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=10) as server:
-                server.starttls()
-                server.login(smtp_user, smtp_pass)
-                server.send_message(msg)
-        except (smtplib.SMTPException, TimeoutError, OSError) as smtp_error:
-            print(f"Port {SMTP_PORT} failed, trying SSL on port 465...")
-            # Fallback to SSL on port 465
-            with smtplib.SMTP_SSL(SMTP_SERVER, 465, timeout=10) as server:
-                server.login(smtp_user, smtp_pass)
-                server.send_message(msg)
-
-        print(f"✓ Email sent successfully to {len(to_emails)} recipient(s)")
-
-        return jsonify({
-            "success": True,
-            "message": f"Email sent to {len(to_emails)} recipient(s)",
-            "recipients": to_emails
-        })
-
-    except smtplib.SMTPAuthenticationError as e:
-        error_msg = f"Authentication failed: {str(e)}"
-        print(error_msg)
-        return jsonify({
-            "error": "Authentication failed",
-            "message": "Invalid email credentials. For Gmail, use an app-specific password: https://support.google.com/accounts/answer/185833",
-            "details": str(e)
-        }), 401
-
-    except smtplib.SMTPException as e:
-        error_msg = f"SMTP error: {str(e)}"
-        print(error_msg)
-        traceback.print_exc()
-        return jsonify({
-            "error": "SMTP error",
-            "message": str(e),
-            "details": str(e)
-        }), 500
+        if success:
+            return jsonify({
+                "success": True,
+                "message": f"Email sent to {len(to_emails)} recipient(s)",
+                "recipients": to_emails
+            }), 200
+        else:
+            return jsonify({
+                "error": "Failed to send email",
+                "message": result,
+                "details": result
+            }), 500
 
     except Exception as e:
         error_msg = f"Error sending email: {str(e)}"

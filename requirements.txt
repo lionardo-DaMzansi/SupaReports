@@ -10,6 +10,7 @@ waitress>=3.0.0
 requests>=2.31.0
 email-validator>=2.1.0
 psycopg2-binary>=2.9.9
+resend>=0.8.0
 
 # Security and file handling
 werkzeug>=3.0.0
