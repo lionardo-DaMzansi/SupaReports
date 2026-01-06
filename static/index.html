@@ -4674,7 +4674,9 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.error || errorData.message || 'Failed to send email');
+                    const error = new Error(errorData.message || errorData.error || 'Failed to send email');
+                    error.details = errorData.details || errorData.message;
+                    throw error;
                 }
 
                 const data = await response.json();
@@ -4683,7 +4685,8 @@
 
             } catch (error) {
                 console.error('Send email error:', error);
-                alert('Failed to send email: ' + error.message);
+                const errorDetails = error.details || error.message || 'Unknown error';
+                alert('Failed to send email: ' + errorDetails);
             } finally {
                 sendButton.disabled = false;
                 sendButton.innerHTML = originalText;
